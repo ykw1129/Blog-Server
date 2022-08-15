@@ -79,5 +79,8 @@
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix"
-  }
+  },
+  "extends": [
+    "plugin:prettier/recommended"
+  ]
 }
