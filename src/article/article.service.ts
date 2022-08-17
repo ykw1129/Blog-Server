@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateArticleDto } from './dto/create-article.dto';
 
 @Injectable()
 export class ArticleService {
@@ -12,5 +13,8 @@ export class ArticleService {
       throw new HttpException(`Article #${id} not found`, HttpStatus.NOT_FOUND);
     }
     return;
+  }
+  create(createArticleDto: CreateArticleDto) {
+    return createArticleDto;
   }
 }

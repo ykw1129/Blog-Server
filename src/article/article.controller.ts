@@ -2,8 +2,9 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ArticleService } from './article.service';
+import { CreateArticleDto } from './dto/create-article.dto';
 
 @Controller('/article')
 export class ArticleController {
@@ -17,5 +18,9 @@ export class ArticleController {
   @Get()
   findOne(@Param('id') id: string) {
     return this.articlesService.findOne(id);
+  }
+  @Post()
+  create(@Body() createArticleDto: CreateArticleDto) {
+    return this.articlesService.create(createArticleDto);
   }
 }
