@@ -6,6 +6,8 @@ export class CreateArticleDto {
   @IsString()
   readonly content: string;
 
-  @IsString({ each: true })
-  readonly tags?: string[];
+  // @IsString({ each: true })
+  // readonly tags?: string[];
+  @IsString()
+  readonly tags: string;
 }
