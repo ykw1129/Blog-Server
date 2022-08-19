@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Tag } from './tag.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Article {
@@ -11,6 +18,7 @@ export class Article {
   @Column()
   content: string;
 
-  @Column()
-  tags: string;
+  @JoinTable()
+  @ManyToMany((type) => Tag, (tag) => tag.articles, { cascade: true })
+  tags: Tag[];
 }

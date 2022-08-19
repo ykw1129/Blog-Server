@@ -2,7 +2,16 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 
@@ -16,11 +25,19 @@ export class ArticleController {
     return this.articlesService.findAll({ limit, offset });
   }
   @Get()
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.articlesService.findOne(id);
   }
   @Post()
   create(@Body() createArticleDto: CreateArticleDto) {
     return this.articlesService.create(createArticleDto);
+  }
+  @Patch(':id')
+  update(@Param('id') id: number, @Body() body) {
+    return this.articlesService.update(id, body);
+  }
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    return this.articlesService.remove(id);
   }
 }

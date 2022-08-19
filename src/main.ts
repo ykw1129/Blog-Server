@@ -12,6 +12,9 @@ async function bootstrap() {
       // forbidNonWhitelisted和白名单结合使用，request携带不存在的属性时，将会报错
       transform: true,
       // 将负载类型转化为相应的DTO
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
     }),
   );
   await app.listen(3000);
