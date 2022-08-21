@@ -18,6 +18,9 @@ export class Article {
   @Column()
   content: string;
 
+  @Column({ default: 0 })
+  recommendation: number;
+
   @JoinTable()
   @ManyToMany((type) => Tag, (tag) => tag.articles, { cascade: true })
   tags: Tag[];

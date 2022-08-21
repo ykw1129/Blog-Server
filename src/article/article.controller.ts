@@ -14,15 +14,15 @@ import {
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('/article')
 export class ArticleController {
   constructor(private readonly articlesService: ArticleService) {}
 
   @Get()
-  findAll(@Query() params: any) {
-    const { limit, offset } = params;
-    return this.articlesService.findAll({ limit, offset });
+  findAll(@Query() paginationQuery: PaginationQueryDto) {
+    return this.articlesService.findAll(paginationQuery);
   }
   @Get()
   findOne(@Param('id') id: number) {

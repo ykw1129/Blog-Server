@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { Article } from './entities/article.entity';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { Tag } from './entities/tag.entity';
-
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { Event } from '../event/entities/event.entity';
 @Injectable()
 export class ArticleService {
   constructor(
@@ -13,10 +14,14 @@ export class ArticleService {
     private readonly articleRepository: Repository<Article>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
+    private readonly connection: DataSource,
   ) {}
-  findAll({ limit, offset }: any) {
+  findAll(paginationQuery: PaginationQueryDto) {
+    const { limit, offset } = paginationQuery;
     return this.articleRepository.find({
       relations: ['tags'],
+      skip: offset,
+      take: limit,
     });
   }
   async findOne(id: number) {
@@ -58,6 +63,25 @@ export class ArticleService {
   async remove(id: number) {
     const article = await this.articleRepository.findOne({ where: { id: id } });
     return this.articleRepository.remove(article);
+  }
+  async recommendArticle(article: Article) {
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      article.recommendation++;
+      const recommendEvent = new Event();
+      recommendEvent.name = 'recommend_article';
+      recommendEvent.type = 'article';
+      recommendEvent.payload = { articleId: article.id };
+      await queryRunner.manager.save(article);
+      await queryRunner.manager.save(recommendEvent);
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
   private async preloadTagByName(name: string): Promise<Tag> {
     const existingTag = await this.tagRepository.findOne({
