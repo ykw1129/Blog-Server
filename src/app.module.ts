@@ -3,6 +3,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
 @Module({
   imports: [
     ArticleModule,
@@ -15,6 +18,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: 'test2',
       autoLoadEntities: true,
       synchronize: true,
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
     }),
   ],
   controllers: [AppController],
