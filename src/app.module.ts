@@ -25,6 +25,12 @@ import { join } from 'path';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'COFFEE',
+      useFactory: () => ['yes', 'no'],
+    },
+  ],
 })
 export class AppModule {}
