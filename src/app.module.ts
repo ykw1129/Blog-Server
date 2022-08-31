@@ -6,16 +6,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
+import { env } from 'process';
 @Module({
   imports: [
     ArticleModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '123456',
-      database: 'test2',
+      host: env.DATABASE_HOST,
+      port: +env.DATABASE_PORT || 3306,
+      username: env.DATABASE_USERNAME,
+      password: env.DATABASE_PASSWORD,
+      database: env.DATABASE_NAME,
       autoLoadEntities: true,
       synchronize: true,
     }),
@@ -23,14 +25,9 @@ import { join } from 'path';
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
+    ConfigModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: 'COFFEE',
-      useFactory: () => ['yes', 'no'],
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
