@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -7,6 +7,8 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 import { Tag } from './entities/tag.entity';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { Event } from '../event/entities/event.entity';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import articleConfig from './config/article.config';
 @Injectable()
 export class ArticleService {
   constructor(
@@ -15,7 +17,11 @@ export class ArticleService {
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
     private readonly connection: DataSource,
-  ) {}
+    @Inject(articleConfig.KEY)
+    private readonly articleConfiguration: ConfigType<typeof articleConfig>,
+  ) {
+    console.log(articleConfiguration.foo);
+  }
   findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
     return this.articleRepository.find({

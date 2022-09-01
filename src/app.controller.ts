@@ -1,12 +1,13 @@
 import { Controller, Get, Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    @Inject('COFFEE') coffees: string[],
+    private readonly configService: ConfigService,
   ) {
-    console.log(coffees);
+    console.log(this.configService.get('database.host'));
   }
 }

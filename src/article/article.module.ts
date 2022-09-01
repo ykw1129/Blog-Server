@@ -9,8 +9,13 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { ArticleResolver } from './article.resolver';
+import { ConfigModule } from '@nestjs/config';
+import articleConfig from './config/article.config';
 @Module({
-  imports: [TypeOrmModule.forFeature([Article, Tag, Event])],
+  imports: [
+    TypeOrmModule.forFeature([Article, Tag, Event]),
+    ConfigModule.forFeature(articleConfig),
+  ],
   controllers: [ArticleController],
   providers: [ArticleService, ArticleResolver],
 })
