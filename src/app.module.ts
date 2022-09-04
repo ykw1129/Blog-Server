@@ -10,6 +10,7 @@ import { env } from 'process';
 import { JoinTable } from 'typeorm';
 import appConfig from './config/app.config';
 import { APP_PIPE } from '@nestjs/core';
+import { CommonModule } from './common/common.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -36,6 +37,7 @@ import { APP_PIPE } from '@nestjs/core';
       autoSchemaFile: true,
     }),
     ArticleModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [
