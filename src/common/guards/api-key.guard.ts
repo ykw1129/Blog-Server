@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
-Injectable();
+@Injectable()
 export class ApiKeyGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
@@ -14,6 +14,7 @@ export class ApiKeyGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const isPublic = this.reflector.get(IS_PUBLIC_KEY, context.getHandler());
+    console.log(isPublic);
     if (isPublic) {
       return true;
     }
