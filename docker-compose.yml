@@ -2,9 +2,8 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: mysql
     restart: always
     ports:
       - '5432:5432'
-    environment: POSTGRES_PASSWORD:pass123
-
+    environment: MYSQL_PASSWORD:123456

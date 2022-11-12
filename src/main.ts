@@ -1,6 +1,8 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, HttpException } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { ApiKeyGuard } from './common/guards/api-key.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,8 +14,12 @@ async function bootstrap() {
       // forbidNonWhitelisted和白名单结合使用，request携带不存在的属性时，将会报错
       transform: true,
       // 将负载类型转化为相应的DTO
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(3000);
 }
 bootstrap();
