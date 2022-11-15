@@ -1,12 +1,5 @@
 version: '3.8'
 services:
-  blog-server:
-    build: .
-    ports:
-      - '3000:3000'
-    volumes:
-      - /.:/project:ro
-    command: npm run start
   db:
     image: mysql
     volumes:
@@ -17,3 +10,10 @@ services:
       - DATABASE_USER=root
       - DATABASE_PASSWORD=123456
       - DATABASE_NAME=test
+  blog-server:
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - /.:/project:ro
+    command: npm run start
