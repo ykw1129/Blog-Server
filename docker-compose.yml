@@ -9,6 +9,8 @@ services:
     command: npm run start
   db:
     image: mysql
+    volumes:
+      - ./data:/var/lib/mysql
     restart: always
     ports:
       - '3306:3306'
