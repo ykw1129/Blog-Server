@@ -1,14 +1,16 @@
-name: build-github-action
-run-name: ${{ github.actor }} is learning GitHub Actions
+name: build-docker-action
+run-name: ${{ github.action }}
 on: [push]
 jobs:
   check-bats-version:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Hello world action step
+        id: hello
+        uses: actions/docker
         with:
-          node-version: '16.17.0'
-      - run: npm install -g bats
-      - run: bats -v
+          who-to-greet: 'Mona the Octocat'
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"
 
