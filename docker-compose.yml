@@ -5,7 +5,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./:project
+      - /.:/project:ro
     command: npm run start
   db:
     image: mysql
