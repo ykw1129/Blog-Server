@@ -6,15 +6,15 @@ services:
       - '3000:3000'
     volumes:
       - /.:/project:ro
+      - /project/node_modules
     command: npm run start
   db:
     image: mysql
     volumes:
       - ./data:/var/lib/mysql
-    restart: always
     ports:
       - '3306:3306'
     environment:
-      - DATABASE_USER:root
-      - DATABASE_PASSWORD:123456
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=123456
       - DATABASE_NAME=test
