@@ -1,5 +1,5 @@
 name: Docker Image CI
-description: ${{ github.actor }}
+run-name: ${{ github.actor }}
 on:
   push:
     branches: ['master']
