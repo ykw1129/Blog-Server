@@ -3,17 +3,16 @@ services:
   db:
     image: mysql
     volumes:
-      - ./data:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
     ports:
       - '3306:3306'
     environment:
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=123456
-      - DATABASE_NAME=test
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=123456
+      - MYSQL_DATABASE=test
   blog-server:
     build: .
     ports:
       - '3000:3000'
     volumes:
       - /.:/project:ro
-    command: npm run start

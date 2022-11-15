@@ -6,3 +6,4 @@ RUN npm config set registry http://registry.npmmirror.com
 RUN npm install
 COPY . .
 EXPOSE 3000
+CMD [ "npm","start" ]
