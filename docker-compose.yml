@@ -6,6 +6,7 @@ services:
       - '3000:3000'
     volumes:
       - /.:/project:ro
+    command: npm run start
   db:
     image: mysql
     volumes:
