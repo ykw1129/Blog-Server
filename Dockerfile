@@ -1,7 +1,8 @@
-FROM node:16.8-alpine3.11 as builder
+FROM node:18-alpine3.15
 ENV NODE_ENV build
 WORKDIR /project
-COPY package.json /project
+COPY package.json .
+RUN pwd
 RUN npm config get registry
 RUN npm config set registry http://registry.npmmirror.com
 RUN npm install
