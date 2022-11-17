@@ -28,6 +28,6 @@ services:
       - $SERVER_PORT:$SERVER_PORT
 networks:
   mysql:
-    driver: bridge2
+    driver: bridge
   backend:
-    driver: bridge1
+    driver: bridge
