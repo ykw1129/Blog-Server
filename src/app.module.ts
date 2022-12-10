@@ -1,3 +1,4 @@
+import { UserModule } from './user/user.module';
 import { ArticleModule } from './article/article.module';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -13,6 +14,8 @@ import { APP_PIPE } from '@nestjs/core';
 import { CommonModule } from './common/common.module';
 @Module({
   imports: [
+    UserModule,
+    UserModule,
     ConfigModule.forRoot({
       load: [appConfig],
       /*       validationSchema: Joi.object({
