@@ -7,13 +7,12 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { type } from 'os';
 
 @Entity()
 @ObjectType()
 export class Article {
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @Field()
@@ -24,12 +23,12 @@ export class Article {
   @Column()
   content: string;
 
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   @Column({ default: 0 })
   recommendation: number;
 
-  @Field((type) => [Tag], { nullable: true })
+  @Field(() => [Tag], { nullable: true })
   @JoinTable()
-  @ManyToMany((type) => Tag, (tag) => tag.articles, { cascade: true })
+  @ManyToMany(() => Tag, (tag) => tag.articles, { cascade: true })
   tags: Tag[];
 }

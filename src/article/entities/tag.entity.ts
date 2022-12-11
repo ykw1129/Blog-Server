@@ -6,14 +6,14 @@ import { Article } from './article.entity';
 @ObjectType()
 export class Tag {
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @Field()
   @Column()
   name: string;
 
-  @Field((type) => [Article], { nullable: true })
-  @ManyToMany((type) => Article, (article) => article.tags)
+  @Field(() => [Article], { nullable: true })
+  @ManyToMany(() => Article, (article) => article.tags)
   articles: Article[];
 }

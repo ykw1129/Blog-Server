@@ -1,3 +1,4 @@
+import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ArticleModule } from './article/article.module';
 import { Module, ValidationPipe } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { CommonModule } from './common/common.module';
 @Module({
   imports: [
+    AuthModule,
     UserModule,
     UserModule,
     ConfigModule.forRoot({
