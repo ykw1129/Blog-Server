@@ -13,6 +13,6 @@ export class AuthService {
     private readonly jwtAuthGuard: JwtAuthGuard,
   ) {}
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.userService.findOne({});
+    const user = await this.userService.findOneByEmail(email);
   }
 }

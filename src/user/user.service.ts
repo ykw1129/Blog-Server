@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entity/user.entity';
@@ -13,5 +13,13 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
-  findOne(email: string) {}
+  async findOneByEmail(email: string) {
+    const user = await this.userRepository.findOne({
+      where: { email: email },
+    });
+    if (!user) {
+      throw new HttpException(`User not found`, HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
 }
