@@ -15,9 +15,6 @@ import { APP_PIPE } from '@nestjs/core';
 import { CommonModule } from './common/common.module';
 @Module({
   imports: [
-    AuthModule,
-    UserModule,
-    UserModule,
     ConfigModule.forRoot({
       load: [appConfig],
       /*       validationSchema: Joi.object({
@@ -42,6 +39,8 @@ import { CommonModule } from './common/common.module';
       autoSchemaFile: true,
     }),
     ArticleModule,
+    UserModule,
+    AuthModule,
     CommonModule,
   ],
   controllers: [AppController],

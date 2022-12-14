@@ -1,6 +1,6 @@
-import { Gender } from '@/typings/dto.d';
-import { Article } from '@/article/entities/article.entity';
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Gender } from '@/typings/dto';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { BaseDateDto } from '../../common/dto/base-date.dto';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -42,5 +42,8 @@ export class User {
   @Column()
   description: string;
 
+  @Field()
+  @Column(() => BaseDateDto)
+  date: BaseDateDto;
   // articles: Article[];
 }
