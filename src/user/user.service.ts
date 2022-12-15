@@ -21,13 +21,12 @@ export class UserService {
   }
   async createUser(registerDto: RegisterDto): Promise<User | undefined> {
     const { email } = registerDto;
-    const user = await this.userRepository.findOne({
-      where: { email: email },
-    });
+    const user = await this.findOneByEmail(email);
     if (user) {
       throw new HttpException(`User already exists`, HttpStatus.NOT_FOUND);
     } else {
-      return user;
+      const user = this.userRepository.create(registerDto);
+      return this.userRepository.save(user);
     }
   }
 }

@@ -22,8 +22,8 @@ export class User {
   })
   gender: string;
 
-  @Field(() => Int)
-  @Column()
+  @Field()
+  @Column({ nullable: true })
   phone: number;
 
   @Field()
@@ -35,11 +35,15 @@ export class User {
   password: string;
 
   @Field()
-  @Column()
+  @Column({
+    nullable: true,
+  })
   address: string;
 
   @Field()
-  @Column()
+  @Column({
+    nullable: true,
+  })
   description: string;
 
   @Field()
