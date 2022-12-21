@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "start:dev",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}",
+      "preLaunchTask": "npm: start:dev"
+    }
+  ]
+}

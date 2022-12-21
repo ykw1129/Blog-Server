@@ -9,16 +9,15 @@ import { LocalStrategy } from './strategy/local.strategy';
 import { UserModule } from '@/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
 
 @Module({
   imports: [
+    UserModule,
     PassportModule,
     JwtModule.register({
       secret: 'hello',
       signOptions: { expiresIn: '60s' },
     }),
-    UserModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy],
