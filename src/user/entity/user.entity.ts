@@ -1,3 +1,4 @@
+import { Role } from '@/typings/dto';
 import { Gender } from '@/typings/dto';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BaseDateDto } from '../../common/dto/base-date.dto';
@@ -20,7 +21,15 @@ export class User {
     enum: Gender,
     default: Gender.secret,
   })
-  gender: string;
+  gender: number;
+
+  @Field(() => Role)
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.User,
+  })
+  role: number;
 
   @Field()
   @Column({ nullable: true })

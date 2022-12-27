@@ -7,3 +7,7 @@ export enum Gender {
   male = 1,
   female = 2,
 }
+export enum Role {
+  User,
+  Admin,
+}
