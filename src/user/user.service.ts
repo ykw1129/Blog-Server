@@ -23,7 +23,7 @@ export class UserService {
     const { email } = registerDto;
     const user = await this.findOneByEmail(email);
     if (user) {
-      throw new HttpException(`User already exists`, HttpStatus.NOT_FOUND);
+      throw new HttpException('User already exists', HttpStatus.NOT_FOUND);
     } else {
       const user = this.userRepository.create(registerDto);
       return this.userRepository.save(user);
