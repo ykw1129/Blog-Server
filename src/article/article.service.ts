@@ -22,13 +22,14 @@ export class ArticleService {
   ) {
     console.log(articleConfiguration.foo);
   }
-  findAll(paginationQuery: PaginationQueryDto) {
+  async findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
-    return this.articleRepository.find({
+    const list = await this.articleRepository.find({
       relations: ['tags'],
       skip: offset,
       take: limit,
     });
+    return { list };
   }
   async findOne(id: number) {
     const article = await this.articleRepository.findOne({

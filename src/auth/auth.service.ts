@@ -21,10 +21,11 @@ export class AuthService {
     return null;
   }
   async login(user: any) {
-    const payload = { email: user.username, id: user.id };
+    const { date, role, ...payload } = user;
+    payload.message = '获取用户信息成功';
     return {
       ...user,
-      access_token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
     };
   }
 }

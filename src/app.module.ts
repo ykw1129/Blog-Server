@@ -11,8 +11,9 @@ import { ConfigModule } from '@nestjs/config';
 import { env } from 'process';
 import { JoinTable } from 'typeorm';
 import appConfig from './config/app.config';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { CommonModule } from './common/common.module';
+import { WrapResponseInterceptor } from './common/interceptors/wrap-response.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -49,6 +50,10 @@ import { CommonModule } from './common/common.module';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: WrapResponseInterceptor,
     },
   ],
 })

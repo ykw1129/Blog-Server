@@ -4,12 +4,31 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable, tap } from 'rxjs';
-
+import { map, Observable, tap } from 'rxjs';
+export interface Response<T> {
+  statusCode: number;
+  message: string;
+  currentDate: Date | string;
+  data: T;
+}
 @Injectable()
-export class WrapResponseInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    console.log('Before');
-    return next.handle().pipe(tap((data) => console.log(data)));
+export class WrapResponseInterceptor<T>
+  implements NestInterceptor<T, Response<T>>
+{
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<Response<T>> {
+    return next.handle().pipe(
+      map((data) => {
+        const { message, ...newData } = data;
+        return {
+          statusCode: context.switchToHttp().getResponse().statusCode,
+          message: data.message || '',
+          currentDate: new Date().toISOString(),
+          data: newData.list ? newData.list : newData,
+        };
+      }),
+    );
   }
 }
