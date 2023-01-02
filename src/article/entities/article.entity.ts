@@ -4,9 +4,11 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { User } from '../../user/entity/user.entity';
 
 @Entity()
 @ObjectType()
@@ -31,4 +33,8 @@ export class Article {
   @JoinTable()
   @ManyToMany(() => Tag, (tag) => tag.articles, { cascade: true })
   tags: Tag[];
+
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.articles)
+  author: User;
 }

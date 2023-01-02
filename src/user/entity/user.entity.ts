@@ -2,7 +2,14 @@ import { Role } from '@/typings/dto';
 import { Gender } from '@/typings/dto';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BaseDateDto } from '../../common/dto/base-date.dto';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Article } from '../../article/entities/article.entity';
 
 @Entity()
 @ObjectType()
@@ -21,7 +28,7 @@ export class User {
     enum: Gender,
     default: Gender.secret,
   })
-  gender: number;
+  gender: Gender;
 
   @Field(() => Role)
   @Column({
@@ -29,7 +36,7 @@ export class User {
     enum: Role,
     default: Role.User,
   })
-  role: number;
+  role: Role;
 
   @Field()
   @Column({ nullable: true })
@@ -55,8 +62,12 @@ export class User {
   })
   description: string;
 
-  @Field()
+  @Field(() => [Article], { nullable: true })
+  @OneToMany(() => Article, (article) => article.author)
+  articles: Article[];
+
   @Column(() => BaseDateDto)
   date: BaseDateDto;
+
   // articles: Article[];
 }

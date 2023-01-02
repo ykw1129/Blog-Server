@@ -1,5 +1,9 @@
-import { IsString } from 'class-validator';
+import { User } from '@/user/entity/user.entity';
+import { IsNumber, IsString } from 'class-validator';
 export class CreateArticleDto {
+  @IsNumber()
+  readonly author: Pick<User, 'id'>;
+
   @IsString()
   readonly name: string;
 

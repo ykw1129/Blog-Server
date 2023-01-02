@@ -17,6 +17,9 @@ export class UserService {
   async findOneByEmail(email: string): Promise<User | undefined> {
     return await this.userRepository.findOne({
       where: { email: email },
+      relations: {
+        articles: true,
+      },
     });
   }
   async createUser(registerDto: RegisterDto): Promise<User | undefined> {
