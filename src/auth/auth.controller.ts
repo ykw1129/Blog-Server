@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 /*
 https://docs.nestjs.com/controllers#controllers
 */
@@ -15,6 +16,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { WrapResponseInterceptor } from '@/common/interceptors/wrap-response.interceptor';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

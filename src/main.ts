@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ApiKeyGuard } from './common/guards/api-key.guard';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WrapResponseInterceptor } from './common/interceptors/wrap-response.interceptor';
 
 async function bootstrap() {
@@ -22,6 +23,13 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(new WrapResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+  const config = new DocumentBuilder()
+    .setTitle('Blog Server')
+    .setDescription('The Blog Server API description')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
   await app.listen(3000);
 }
 bootstrap();

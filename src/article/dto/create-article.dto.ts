@@ -1,4 +1,5 @@
 import { User } from '@/user/entity/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 export class CreateArticleDto {
   @IsNumber()
@@ -9,7 +10,6 @@ export class CreateArticleDto {
 
   @IsString()
   readonly content: string;
-
   @IsString({ each: true })
   readonly tags: string[];
   // @IsString()

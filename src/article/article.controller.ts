@@ -17,7 +17,9 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { Public } from '../common/decorators/public.decorator';
 import { ParseIntPipe } from '../common/pipes/parse-int.pipe';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('articles')
 @Controller('/article')
 export class ArticleController {
   constructor(private readonly articlesService: ArticleService) {}
