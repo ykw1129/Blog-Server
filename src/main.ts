@@ -5,6 +5,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ApiKeyGuard } from './common/guards/api-key.guard';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WrapResponseInterceptor } from './common/interceptors/wrap-response.interceptor';
+import * as fs from 'fs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,9 +27,12 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Blog Server')
     .setDescription('The Blog Server API description')
+    .addTag('API')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+  const json = JSON.stringify(document, null, 2);
+  fs.writeFileSync('./public/swagger.json', json, 'utf8');
   SwaggerModule.setup('api', app, document);
   await app.listen(3000);
 }

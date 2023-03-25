@@ -16,7 +16,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { WrapResponseInterceptor } from '@/common/interceptors/wrap-response.interceptor';
 
-@ApiTags('auth')
+@ApiTags('验证')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

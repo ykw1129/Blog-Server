@@ -19,7 +19,7 @@ import { Public } from '../common/decorators/public.decorator';
 import { ParseIntPipe } from '../common/pipes/parse-int.pipe';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('articles')
+@ApiTags('文章管理')
 @Controller('/article')
 export class ArticleController {
   constructor(private readonly articlesService: ArticleService) {}
@@ -49,5 +49,14 @@ export class ArticleController {
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.articlesService.remove(id);
+  }
+
+  @Get('recommend')
+  recommendArticle(
+    @Query('articleId', ParseIntPipe) articleId: number,
+    @Query('userId', ParseIntPipe) userId: number,
+  ) {
+    console.log(articleId, userId);
+    return this.articlesService.recommendArticleById(articleId, userId);
   }
 }

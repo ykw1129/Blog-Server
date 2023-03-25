@@ -1,3 +1,4 @@
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ArticleModule } from './article/article.module';
@@ -13,8 +14,16 @@ import { JoinTable } from 'typeorm';
 import appConfig from './config/app.config';
 import { APP_PIPE } from '@nestjs/core';
 import { CommonModule } from './common/common.module';
+import { join } from 'path';
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'), // 静态资源所在目录的绝对路径，这里使用了 Node.js 中的 path 模块
+      serveStaticOptions: {
+        cacheControl: true,
+        immutable: true,
+      },
+    }),
     ConfigModule.forRoot({
       load: [appConfig],
       /*       validationSchema: Joi.object({

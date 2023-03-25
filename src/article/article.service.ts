@@ -9,6 +9,7 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { Event } from '../event/entities/event.entity';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import articleConfig from './config/article.config';
+import { User } from '@/user/entity/user.entity';
 @Injectable()
 export class ArticleService {
   constructor(
@@ -16,6 +17,8 @@ export class ArticleService {
     private readonly articleRepository: Repository<Article>,
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
+    @InjectRepository(Event)
+    private readonly eventRepository: Repository<Event>,
     private readonly connection: DataSource,
     @Inject(articleConfig.KEY)
     private readonly articleConfiguration: ConfigType<typeof articleConfig>,
@@ -63,7 +66,7 @@ export class ArticleService {
       tags,
     });
     if (!article) {
-      throw new HttpException(`Article #${id} not found`, HttpStatus.NOT_FOUND);
+      throw new HttpException(`文章 #${id} 未找到`, HttpStatus.NOT_FOUND);
     }
     return this.articleRepository.save(article);
   }
@@ -71,23 +74,53 @@ export class ArticleService {
     const article = await this.articleRepository.findOne({ where: { id: id } });
     return this.articleRepository.remove(article);
   }
-  async recommendArticle(article: Article) {
-    const queryRunner = this.connection.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      article.recommendation++;
-      const recommendEvent = new Event();
-      recommendEvent.name = 'recommend_article';
-      recommendEvent.type = 'article';
-      recommendEvent.payload = { articleId: article.id };
-      await queryRunner.manager.save(article);
-      await queryRunner.manager.save(recommendEvent);
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-    } finally {
-      await queryRunner.release();
+  private async isRecommendedArticle(articleId: number, userId: number) {
+    const recommendEvent = await this.eventRepository.findOne({
+      where: { payload: { articleId: articleId, referrer: userId } },
+    });
+    if (recommendEvent) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  private async recommendArticle(article: Article, userId: number) {
+    const isExist = await this.isRecommendedArticle(article.id, userId);
+    if (isExist) {
+      throw new HttpException('该文章已经推荐过了', HttpStatus.OK);
+    } else {
+      const queryRunner = this.connection.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      try {
+        article.recommendation++;
+        const recommendEvent = new Event();
+        recommendEvent.name = 'recommend_article';
+        recommendEvent.type = 'article';
+        recommendEvent.payload = { articleId: article.id, referrer: userId };
+        await queryRunner.manager.save(article);
+        await queryRunner.manager.save(recommendEvent);
+        await queryRunner.commitTransaction();
+        return { message: '推荐成功' };
+      } catch (err) {
+        await queryRunner.rollbackTransaction();
+        throw new HttpException(`推荐失败`, HttpStatus.OK);
+      } finally {
+        await queryRunner.release();
+      }
+    }
+  }
+  async recommendArticleById(articleId: number, userId: number) {
+    const article = await this.articleRepository.findOne({
+      where: { id: articleId },
+    });
+    if (!article) {
+      throw new HttpException(
+        `文章 #${articleId} 没找到`,
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      return await this.recommendArticle(article, userId);
     }
   }
   private async preloadTagByName(name: string): Promise<Tag> {
