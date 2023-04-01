@@ -10,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Article } from '../../article/entities/article.entity';
+import { Event } from '@/event/entities/event.entity';
 
 @Entity()
 @ObjectType()
@@ -65,6 +66,10 @@ export class User {
   @Field(() => [Article], { nullable: true })
   @OneToMany(() => Article, (article) => article.author)
   articles: Article[];
+
+  @Field(() => [Event], { nullable: true })
+  @OneToMany(() => Event, (event) => event.referrer)
+  events: Event[];
 
   @Column(() => BaseDateDto)
   date: BaseDateDto;

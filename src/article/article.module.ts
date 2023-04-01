@@ -1,3 +1,4 @@
+import { User } from '@/user/entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleService } from './article.service';
 import { Module } from '@nestjs/common';
@@ -13,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
 import articleConfig from './config/article.config';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Article, Tag, Event]),
+    TypeOrmModule.forFeature([Article, Tag, Event, User]),
     ConfigModule.forFeature(articleConfig),
   ],
   controllers: [ArticleController],

@@ -30,12 +30,6 @@ export class ArticleController {
     return this.articlesService.findAll(paginationQuery);
   }
 
-  @Public()
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.articlesService.findOne(id);
-  }
-
   @Post()
   create(@Body() createArticleDto: CreateArticleDto) {
     return this.articlesService.create(createArticleDto);
@@ -51,12 +45,16 @@ export class ArticleController {
     return this.articlesService.remove(id);
   }
 
-  @Get('recommend')
+  @Get('/recommend')
   recommendArticle(
     @Query('articleId', ParseIntPipe) articleId: number,
     @Query('userId', ParseIntPipe) userId: number,
   ) {
-    console.log(articleId, userId);
     return this.articlesService.recommendArticleById(articleId, userId);
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.articlesService.findOne(id);
   }
 }

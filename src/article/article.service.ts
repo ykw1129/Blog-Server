@@ -19,6 +19,8 @@ export class ArticleService {
     private readonly tagRepository: Repository<Tag>,
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly connection: DataSource,
     @Inject(articleConfig.KEY)
     private readonly articleConfiguration: ConfigType<typeof articleConfig>,
@@ -74,18 +76,21 @@ export class ArticleService {
     const article = await this.articleRepository.findOne({ where: { id: id } });
     return this.articleRepository.remove(article);
   }
-  private async isRecommendedArticle(articleId: number, userId: number) {
-    const recommendEvent = await this.eventRepository.findOne({
-      where: { payload: { articleId: articleId, referrer: userId } },
-    });
+  async isRecommendedArticle(articleId: number, referrerId: number) {
+    const recommendEvent = await this.eventRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.referrer', 'referrer')
+      .where(`event.referrer.id = :referrerId`, { referrerId })
+      .andWhere(`event.payload ->>'$.articleId' = :articleId`, { articleId })
+      .getOne();
     if (recommendEvent) {
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   }
-  private async recommendArticle(article: Article, userId: number) {
-    const isExist = await this.isRecommendedArticle(article.id, userId);
+  async recommendArticle(article: Article, referrer: User) {
+    const isExist = await this.isRecommendedArticle(article.id, referrer.id);
     if (isExist) {
       throw new HttpException('该文章已经推荐过了', HttpStatus.OK);
     } else {
@@ -97,7 +102,8 @@ export class ArticleService {
         const recommendEvent = new Event();
         recommendEvent.name = 'recommend_article';
         recommendEvent.type = 'article';
-        recommendEvent.payload = { articleId: article.id, referrer: userId };
+        recommendEvent.payload = { articleId: article.id };
+        recommendEvent.referrer = referrer;
         await queryRunner.manager.save(article);
         await queryRunner.manager.save(recommendEvent);
         await queryRunner.commitTransaction();
@@ -110,20 +116,28 @@ export class ArticleService {
       }
     }
   }
-  async recommendArticleById(articleId: number, userId: number) {
+  async recommendArticleById(articleId: number, referrerId: number) {
     const article = await this.articleRepository.findOne({
       where: { id: articleId },
+    });
+    const referrer = await this.userRepository.findOne({
+      where: { id: referrerId },
     });
     if (!article) {
       throw new HttpException(
         `文章 #${articleId} 没找到`,
         HttpStatus.NOT_FOUND,
       );
-    } else {
-      return await this.recommendArticle(article, userId);
     }
+    if (!referrer) {
+      throw new HttpException(
+        `用户 #${referrerId} 没找到`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return this.recommendArticle(article, referrer);
   }
-  private async preloadTagByName(name: string): Promise<Tag> {
+  async preloadTagByName(name: string): Promise<Tag> {
     const existingTag = await this.tagRepository.findOne({
       where: { name: name },
     });

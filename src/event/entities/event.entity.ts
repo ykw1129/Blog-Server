@@ -1,7 +1,16 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '@/user/entity/user.entity';
+import { Field, ObjectType } from '@nestjs/graphql';
+import {
+  Column,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Index(['name', 'type'])
 @Entity()
+@ObjectType()
 export class Event {
   @PrimaryGeneratedColumn()
   id: number;
@@ -13,6 +22,10 @@ export class Event {
   @Column()
   name: string;
 
-  @Column('json')
-  payload: Record<string, any>;
+  @Column('simple-json')
+  payload: { articleId: number; message?: string };
+
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.events)
+  referrer: User;
 }
