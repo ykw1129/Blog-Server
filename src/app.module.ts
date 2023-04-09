@@ -1,3 +1,6 @@
+import { FileModule } from './file/file.module';
+import { FileController } from './file/file.controller';
+import { FilesService } from './file/file.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
@@ -51,6 +54,7 @@ import { join } from 'path';
     UserModule,
     AuthModule,
     CommonModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [
