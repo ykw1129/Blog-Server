@@ -7,17 +7,10 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
-  MaxFileSizeValidator,
-  FileTypeValidator,
-  ParseFilePipe,
   Body,
   UploadedFiles,
 } from '@nestjs/common';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-  FilesInterceptor,
-} from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UploadFileDto } from './dto/upload-file.dto';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { UploadFilesDto } from './dto/upload-files.dto';
@@ -69,6 +62,9 @@ export class FileController {
   })
   @UseInterceptors(
     FilesInterceptor('files', 5, {
+      limits: {
+        fileSize: 1024 * 1024 * 10, // 10 MB
+      },
       storage: diskStorage({
         destination: './public/files',
         filename: (req, file, cb) => {
